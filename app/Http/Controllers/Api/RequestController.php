@@ -14,6 +14,7 @@ class RequestController extends BaseController
 
     public function index()
     {
+        $this->authorize("requestsView");
         $request = req::all();
 
         return $this->sendResponse(RequestResource::collection($request), 'Price retrieved successfully.');
@@ -21,9 +22,8 @@ class RequestController extends BaseController
 
     public function store(Request $request)
     {
-
+        $this->authorize("requestAdd");
         $input = $request->all();
-
         $validator = Validator::make($input, [
             'fname' => 'required|string',
             'email' => 'required|email',

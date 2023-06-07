@@ -17,10 +17,10 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run()
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
-        $arrayOfAllPermissionsNames = ['adminAdd', 'adminEdit', 'adminShow', 'adminsView', 'adminDelete', 'blogAdd', 'blogEdit', 'blogShow', 'blogsView', 'blogDelete', 'portfolioAdd', 'portfolioEdit', 'portfolioShow', 'portfoliosView', 'portfolioDelete', 'pricingAdd', 'pricingEdit', 'pricingShow', 'pricingsView', 'pricingDelete', 'requestShow', 'requestsView', 'tagAdd', 'tagEdit', 'tagShow', 'tagsView', 'tagDelete'];
+        $arrayOfAllPermissionsNames = ['adminAdd', 'adminEdit', 'adminShow', 'adminsView', 'adminDelete', 'blogAdd', 'blogEdit', 'blogShow', 'blogsView', 'blogDelete', 'portfolioAdd', 'portfolioEdit', 'portfolioShow', 'portfoliosView', 'portfolioDelete', 'pricingAdd', 'pricingEdit', 'pricingShow', 'pricingsView', 'pricingDelete', 'requestAdd', 'requestsView', 'tagAdd', 'tagEdit', 'tagShow', 'tagsView', 'tagDelete'];
         $blogsPermissions = ['blogAdd', 'blogEdit', 'blogShow', 'blogsView', 'blogDelete'];
         $portfoliosPermissions = ['portfolioAdd', 'portfolioEdit', 'portfolioShow', 'portfoliosView', 'portfolioDelete'];
-        $requestsPermissions = ['requestShow', 'requestsView'];
+        $requestsPermissions = ['requestAdd', 'requestsView'];
         $pricesPermissions = ['pricingAdd', 'pricingEdit', 'pricingShow', 'pricingsView', 'pricingDelete'];
 
         $permissions = collect($arrayOfAllPermissionsNames)->map(function ($permission) {
@@ -29,10 +29,10 @@ class RolesAndPermissionsSeeder extends Seeder
 
         Permission::insert($permissions->toArray());
 
-      Role::create(["name" => "super admin"])->givePermissionTo($arrayOfAllPermissionsNames);
-      Role::create(["name" => "blogs writer"])->givePermissionTo($blogsPermissions);
-      Role::create(["name" => "picies writer"])->givePermissionTo($pricesPermissions);
-      Role::create(["name" => "portfolios writer"])->givePermissionTo($portfoliosPermissions);
-      Role::create(["name" => "requests recipient"])->givePermissionTo($requestsPermissions);
+        Role::create(["name" => "super admin"])->givePermissionTo($arrayOfAllPermissionsNames);
+        Role::create(["name" => "blogs writer"])->givePermissionTo($blogsPermissions);
+        Role::create(["name" => "picies writer"])->givePermissionTo($pricesPermissions);
+        Role::create(["name" => "portfolios writer"])->givePermissionTo($portfoliosPermissions);
+        Role::create(["name" => "requests recipient"])->givePermissionTo($requestsPermissions);
     }
 }

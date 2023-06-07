@@ -18,9 +18,8 @@ class PostController extends BaseController
      */
     public function index()
     {
-
+        $this->authorize("blogsView");
         $Posts = Post::all();
-
         return $this->sendResponse(PostResource::collection($Posts), 'Posts retrieved successfully.');
     }
     /**
@@ -31,8 +30,8 @@ class PostController extends BaseController
      */
     public function store(Request $request)
     {
+        $this->authorize("blogAdd");
         $input = $request->all();
-        // $input['user_id'] = auth()->user()->id; // Add the ID of the authenticated admin to the input array
         $validator = Validator::make($input, [
             'title' => 'required',
             'subtitle' => 'required',
@@ -65,6 +64,7 @@ class PostController extends BaseController
      */
     public function show($id)
     {
+        $this->authorize("blogShow");
         $Post = Post::find($id);
 
         if (is_null($Post)) {
@@ -83,8 +83,8 @@ class PostController extends BaseController
      */
     public function update(Request $request, Post $Post)
     {
+        $this->authorize("blogEdit");
         $input = $request->all();
-
         $validator = Validator::make($input, [
             'title' => 'required',
             'subtitle' => 'required',
@@ -113,6 +113,7 @@ class PostController extends BaseController
      */
     public function destroy($id)
     {
+        $this->authorize("blogDelete");
         $post = Post::find($id);
         if (!$post) {
             return response()->json(["Not found"]);

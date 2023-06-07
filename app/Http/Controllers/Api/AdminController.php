@@ -48,7 +48,7 @@ class AdminController extends BaseController
             'email' => 'required|email',
             'password' => 'required',
             'c_password' => 'required|same:password',
-            'role' => 'required',
+            'role' => 'array',
         ]);
 
         if ($validator->fails()) {
@@ -60,51 +60,16 @@ class AdminController extends BaseController
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->role = "admin";
-
-        $selectedPermission = $request->permissions;
-
-        $blogsPermissions = ['blogAdd', 'blogEdit', 'blogShow', 'blogsView', 'blogDelete'];
-        $portfoliosPermissions = ['portfolioAdd', 'portfolioEdit', 'portfolioShow', 'portfoliosView', 'portfolioDelete'];
-        $requestsPermissions = ['requestShow', 'requestsView'];
-        $pricesPermissions = ['pricingAdd', 'pricingEdit', 'pricingShow', 'pricingsView', 'pricingDelete'];
-        $tagsPermissions = ['tagAdd', 'tagEdit', 'tagShow', 'tagsView', 'tagDelete'];
-        if ($selectedPermission == "blog") {
-            foreach ($blogsPermissions as $permission) {
-                $user->givePermissionTo($permission);
-            }
-            $user->permissions = json_encode($blogsPermissions);
-        }
-        if ($selectedPermission == "pricing") {
-            foreach ($pricesPermissions as $permission) {
-                $user->givePermissionTo($permission);
-            }
-            $user->permissions = json_encode($pricesPermissions);
-        }
-        if ($selectedPermission == "portfolio") {
-            foreach ($portfoliosPermissions as $permission) {
-                $user->givePermissionTo($permission);
-            }
-            $user->permissions = json_encode($portfoliosPermissions);
-        }
-        if ($selectedPermission == "requests") {
-            foreach ($requestsPermissions as $permission) {
-                $user->givePermissionTo($permission);
-            }
-            $user->permissions = json_encode($requestsPermissions);
-        }
-        if ($selectedPermission == "tags") {
-            foreach ($tagsPermissions as $permission) {
-                $user->givePermissionTo($permission);
-            }
-            $user->permissions = json_encode($tagsPermissions);
-        }
-
+        $user->role = $request->role;
 
         $user->save();
+        $roles = $request->role;
+        foreach ($roles as $role) {
+            $user->assignRole($role); // assign each role to the new user
+        }
         $success['token'] =  $user->createToken('MyApp')->plainTextToken;
         $success['name'] =  $user->name;
-        $success["permissions"] = $user->permissions;
+        $success["role"] = $user->role;
 
 
         return $this->sendResponse($success, 'Admin register successfully.');

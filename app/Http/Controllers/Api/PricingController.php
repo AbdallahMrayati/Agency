@@ -18,6 +18,7 @@ class PricingController extends BaseController
      */
     public function index()
     {
+        $this->authorize("pricingsView");
         $pricing = Pricing::all();
 
         return $this->sendResponse(PricingResource::collection($pricing), 'Price retrieved successfully.');
@@ -42,7 +43,7 @@ class PricingController extends BaseController
     public function store(Request $request)
     {
 
-        // $this->authorize("pricingAdd");
+        $this->authorize("pricingAdd");
         $input = $request->all();
         $validator = Validator::make($input, [
             'title' => 'required',
@@ -73,6 +74,7 @@ class PricingController extends BaseController
      */
     public function show($id)
     {
+        $this->authorize("pricingShow");
         $pricing = Pricing::find($id);
 
         if (is_null($pricing)) {
@@ -102,6 +104,7 @@ class PricingController extends BaseController
      */
     public function update(Request $request, $id)
     {
+        $this->authorize("pricingEdit");
         $price = Pricing::find($id);
         $input = $request->all();
         $validator = Validator::make($input, [
@@ -132,6 +135,7 @@ class PricingController extends BaseController
      */
     public function destroy($id)
     {
+        $this->authorize("pricingDelete");
         $price = Pricing::find($id);
         if (!$price) {
             return response()->json(["Not found"]);
